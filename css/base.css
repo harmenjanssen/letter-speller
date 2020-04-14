@@ -1,0 +1,143 @@
+:root {
+    --background-color: hsl(71, 88%, 76%);
+    --button-color: hsl(14, 98%, 50%);
+    --header-color: hsl(71, 40%, 50%);
+    --button-size: 100px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", Helvetica,Arial, "sans-serif", "Apple Color Emoji", "Segoe UI Emoji";
+    background-color: var(--background-color);
+}
+
+main {
+    margin: 1em;
+    text-align: center;
+    @media (min-width: 786) {
+        max-width: 30%;
+        margin: 1em auto;
+    }
+}
+
+h1 {
+    margin-bottom: 1em;
+    font-family: 'Bungee Shade', cursive;
+    color: var(--header-color);
+}
+
+.instructions {
+    margin-bottom: 5em;
+}
+
+#start-query {
+	width: var(--button-size);
+	height: var(--button-size);
+	margin: 0 auto;
+	font: 0/0 a;
+	cursor: pointer;
+	display: block;
+    border: 0;
+    border-radius: calc(var(--button-size) / 2);
+    border: 1px solid white;
+    /*box-shadow:*/
+        /*inset 0px 1px 0px rgba(255, 255, 255, .3),*/
+        /*inset 0 5px 10px hsl(14, 10%, 40%);*/
+
+	background-color: var(--button-color);
+}
+#start-query:focus {
+    /* TODO */
+    outline: none;
+}
+
+#start-query.is-listening {
+    animation-name: button-pulse;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+
+#feedback {
+    position: relative;
+    margin-top: 0.5em;
+    color: white;
+    font-size: 6em;
+    text-shadow:
+        2px 2px 0 black,
+        5px 5px 0 hsl(307, 100%, 67%)
+        ;
+    font-family: 'Chango', cursive;
+    animation: feedback-appear 400ms cubic-bezier(.17, .89, .32, 1.49);
+    transform-origin: center;
+}
+
+#feedback::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    content: "";
+    /*transform: rotate(45deg);*/
+    /*animation: particle-1 700ms;*/
+    /*animation-fill-mode: forwards;*/
+    box-shadow:
+        0.32476rem -3rem 0 -0.1875rem #ff8080,
+        -0.32476rem -2.625rem 0 -0.1875rem #ffed80,
+        2.54798rem -1.61656rem 0 -0.1875rem #ffed80,
+        1.84982rem -1.89057rem 0 -0.1875rem #a4ff80,
+        2.85252rem 0.98418rem 0 -0.1875rem #a4ff80,
+        2.63145rem 0.2675rem 0 -0.1875rem #80ffc8,
+        1.00905rem 2.84381rem 0 -0.1875rem #80ffc8,
+        1.43154rem 2.22414rem 0 -0.1875rem #80c8ff,
+        -1.59425rem 2.562rem 0 -0.1875rem #80c8ff,
+        -0.84635rem 2.50595rem 0 -0.1875rem #a480ff,
+        -2.99705rem 0.35095rem 0 -0.1875rem #a480ff,
+        -2.48692rem 0.90073rem 0 -0.1875rem #ff80ed,
+        -2.14301rem -2.12438rem 0 -0.1875rem #ff80ed,
+        -2.25479rem -1.38275rem 0 -0.1875rem #ff8080;
+}
+
+@keyframes button-pulse {
+    from {
+        box-shadow: 0 0 0 0 var(--button-color);
+    }
+    to {
+        box-shadow: 0 0 0 16px transparent;
+    }
+}
+
+@keyframes feedback-appear {
+    from {
+        font-size: 0;
+        opacity: 0;
+        color: hsl(307, 100%, 67%);
+    }
+    to {
+        font-size: 6em;
+        transform: scale(1);
+        opacity: 1;
+        color: white;
+    }
+}
+
+@keyframes particle-1 {
+    0% {
+        opacity: 1;
+        background: hsl(307, 100%, 67%);
+    }
+    80% {
+        opacity: 1;
+        background: white;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-60px, -60px);
+    }
+}
