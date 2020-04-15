@@ -38,17 +38,14 @@ h1 {
 #start-query {
 	width: var(--button-size);
 	height: var(--button-size);
-	margin: 0 auto;
+	margin: 0 auto 4rem;
+	display: block;
 	font: 0/0 a;
 	cursor: pointer;
 	display: block;
     border: 0;
     border-radius: calc(var(--button-size) / 2);
     border: 1px solid white;
-    /*box-shadow:*/
-        /*inset 0px 1px 0px rgba(255, 255, 255, .3),*/
-        /*inset 0 5px 10px hsl(14, 10%, 40%);*/
-
 	background-color: var(--button-color);
 }
 #start-query:focus {
@@ -62,7 +59,7 @@ h1 {
     animation-iteration-count: infinite;
 }
 
-#feedback {
+#feedback span {
     position: relative;
     margin-top: 0.5em;
     color: white;
@@ -76,7 +73,7 @@ h1 {
     transform-origin: center;
 }
 
-#feedback::after {
+#feedback span::after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -84,24 +81,6 @@ h1 {
     height: 12px;
     border-radius: 6px;
     content: "";
-    /*transform: rotate(45deg);*/
-    /*animation: particle-1 700ms;*/
-    /*animation-fill-mode: forwards;*/
-    box-shadow:
-        0.32476rem -3rem 0 -0.1875rem #ff8080,
-        -0.32476rem -2.625rem 0 -0.1875rem #ffed80,
-        2.54798rem -1.61656rem 0 -0.1875rem #ffed80,
-        1.84982rem -1.89057rem 0 -0.1875rem #a4ff80,
-        2.85252rem 0.98418rem 0 -0.1875rem #a4ff80,
-        2.63145rem 0.2675rem 0 -0.1875rem #80ffc8,
-        1.00905rem 2.84381rem 0 -0.1875rem #80ffc8,
-        1.43154rem 2.22414rem 0 -0.1875rem #80c8ff,
-        -1.59425rem 2.562rem 0 -0.1875rem #80c8ff,
-        -0.84635rem 2.50595rem 0 -0.1875rem #a480ff,
-        -2.99705rem 0.35095rem 0 -0.1875rem #a480ff,
-        -2.48692rem 0.90073rem 0 -0.1875rem #ff80ed,
-        -2.14301rem -2.12438rem 0 -0.1875rem #ff80ed,
-        -2.25479rem -1.38275rem 0 -0.1875rem #ff8080;
 }
 
 @keyframes button-pulse {
@@ -124,20 +103,5 @@ h1 {
         transform: scale(1);
         opacity: 1;
         color: white;
-    }
-}
-
-@keyframes particle-1 {
-    0% {
-        opacity: 1;
-        background: hsl(307, 100%, 67%);
-    }
-    80% {
-        opacity: 1;
-        background: white;
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-60px, -60px);
     }
 }

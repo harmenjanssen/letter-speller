@@ -5,6 +5,19 @@ var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
+// Map common mishearings to valid results.
+const VISUAL_CORRECTIONS = {
+  'a': 'aa',
+  'i': 'ie',
+  'e': 'ee',
+  'o': 'oo',
+  'u': 'uu',
+  'y': 'ei',
+};
+const AUDITIVE_CORRECTIONS = {
+  'y': 'ei',
+};
+
 init();
 
 function init() {
@@ -27,21 +40,10 @@ function init() {
     console.error('Unable to find Dutch voice.');
   }
 
-  // TODO
-  //initAlphabet(document.getElementById('alphabet'));
   initSpeechQuery(
     document.getElementById('start-query'),
     document.getElementById('feedback')
   );
-}
-
-function initAlphabet(alphabet) {
-  alphabet.addEventListener('click', e => {
-    if (!e.target.hasAttribute('data-speak')) {
-      return;
-    }
-    speak(e.target.getAttribute('data-speak'));
-  });
 }
 
 function initSpeechQuery(button, feedback) {
@@ -67,7 +69,7 @@ function speak(message) {
 
   utterance.lang = 'nl';
   utterance.pitch = 1;
-  utterance.rate = 1.2;
+  utterance.rate = 1;
   window.speechSynthesis.speak(utterance);
 }
 
@@ -84,8 +86,8 @@ function getDutchVoice(voiceList) {
 function getRecognition(button, feedback) {
   const recognition = new SpeechRecognition();
   const speechRecognitionList = new SpeechGrammarList();
-  //speechRecognitionList.addFromString(grammar, 1);
-  //recognition.grammars = speechRecognitionList;
+  speechRecognitionList.addFromString(getGrammar(), 1);
+  recognition.grammars = speechRecognitionList;
   recognition.continuous = false;
   recognition.lang = 'nl-NL';
   recognition.interimResults = false;
@@ -94,6 +96,9 @@ function getRecognition(button, feedback) {
     console.log('Voice recognition ended.');
     recognition.stop();
     button.classList.remove('is-listening');
+  });
+  recognition.addEventListener('error', e => {
+    console.error(e);
   });
   recognition.addEventListener('result', e => {
     button.classList.remove('is-listening');
@@ -104,7 +109,7 @@ function getRecognition(button, feedback) {
     speak(message);
 
     if (word) {
-      feedback.textContent = word;
+      feedback.innerHTML = `<span>${word}</span>`;
     }
     console.log(response);
   });
@@ -114,6 +119,11 @@ function getRecognition(button, feedback) {
   });
 
   return recognition;
+}
+
+function getGrammar() {
+  const sounds = ['a', 'o', 'e', 'u', 'i', 'ie', 'eu', 'ui', 'ei'];
+  return `#JSGF V1.0; grammar colors; public <sound> = ${sounds.join(' | ')} ;`;
 }
 
 function inputIsUnderstandable(response) {
@@ -127,11 +137,24 @@ function getSuccessfulAudioResponse(response) {
   const requestedWord = isLongRequest
     ? response.substr(LONG_REQUEST.length)
     : response.substr(SHORT_REQUEST.length);
-  const feedback = `${isLongRequest ? 'De ' : ''}"${requestedWord}" schrijf je zo:`;
+  const interpretedWord = correctAuditively(requestedWord)
+  const feedback = `${isLongRequest ? 'De ' : ''}"${interpretedWord}" schrijf je zo:`;
+
   return {
     message: feedback,
-    word: requestedWord
+    word: correctVisually(requestedWord),
   };
+}
+
+/**
+ * Try to fix common "mishearings" and nudge towards valid results.
+ */
+function correctVisually(word) {
+  return word in VISUAL_CORRECTIONS ? VISUAL_CORRECTIONS[word] : word;
+}
+
+function correctAuditively(word) {
+  return word in AUDITIVE_CORRECTIONS ? AUDITIVE_CORRECTIONS[word] : word;
 }
 
 function getDisappointingAudioResponse() {
