@@ -106,7 +106,7 @@ a {
         5px 5px 0 hsl(307, 100%, 67%)
         ;
     font-family: 'Chango', cursive;
-    animation: feedback-appear 400ms cubic-bezier(.17, .89, .32, 2.49);
+    animation: feedback-appear 300ms cubic-bezier(.17, .89, .32, 3.49);
     transform-origin: center;
 }
 
