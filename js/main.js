@@ -98,22 +98,18 @@ function getDutchVoice(voiceList) {
 }
 
 function getRecognition(button, feedback) {
-  const recognition = new SpeechRecognition();
-  const speechRecognitionList = new SpeechGrammarList();
-  speechRecognitionList.addFromString(getGrammar(), 1);
-  recognition.grammars = speechRecognitionList;
-  recognition.continuous = false;
-  recognition.lang = 'nl-NL';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
+  const recognition = getRecognitionObject();
+
   recognition.addEventListener('speechend', () => {
     console.log('Voice recognition ended.');
     recognition.stop();
     button.classList.remove('is-listening');
   });
+
   recognition.addEventListener('error', e => {
     console.error(e);
   });
+
   recognition.addEventListener('result', e => {
     button.classList.remove('is-listening');
     const response = e.results[0][0].transcript;
@@ -123,6 +119,7 @@ function getRecognition(button, feedback) {
 
     speak(message).then(() => {
       console.log('Done speaking');
+      // Account for ambigious sounds that yield multiple results.
       if (Array.isArray(word) && continuation !== undefined) {
         speak(continuation);
         appendWord(feedback, ' ' + word[1]);
@@ -169,11 +166,18 @@ function getSuccessfulAudioResponse(response) {
   const interpretedWord = correctAuditively(requestedWord)
   const feedback = `${isLongRequest ? 'De ' : ''}"${interpretedWord}" schrijf je zo:`;
 
+  // A pair of hard-coded ambiguous sounds.
   if (requestedWord === 'au') {
     return {
       message: feedback,
       continuation: 'Óf zo:',
       word: ['au', 'ou'],
+    };
+  } else if (requestedWord === 'y') {
+    return {
+      message: feedback,
+      continuation: 'Óf zo:',
+      word: ['ei', 'ij'],
     };
   }
 
@@ -181,6 +185,18 @@ function getSuccessfulAudioResponse(response) {
     message: feedback,
     word: correctVisually(requestedWord),
   };
+}
+
+function getRecognitionObject() {
+  const recognition = new SpeechRecognition();
+  const speechRecognitionList = new SpeechGrammarList();
+  speechRecognitionList.addFromString(getGrammar(), 1);
+  recognition.grammars = speechRecognitionList;
+  recognition.continuous = false;
+  recognition.lang = 'nl-NL';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  return recognition;
 }
 
 /**
