@@ -13,9 +13,20 @@ const VISUAL_CORRECTIONS = {
   'o': 'oo',
   'u': 'uu',
   'y': 'ei',
+  'q': 'oe',
+  'hoe': 'oeh',
+  'eruit': 'ui',
+  'rui': 'ui',
 };
 const AUDITIVE_CORRECTIONS = {
+  // Choose some likely sounds over otherwise valid options.
+  // Note that this disables "Q" and "Y" from being chosen.
   'y': 'ei',
+  'q': 'oeh',
+  'hoe': 'oeh',
+  'eruit': 'ui',
+  'rui': 'ui',
+  'eu': 'euh',
 };
 
 init();
@@ -50,14 +61,13 @@ function initSpeechQuery(button, feedback) {
   const recognition = getRecognition(button, feedback);
 
   button.addEventListener('mousedown', () => {
-    console.log('Starting recognition');
-    button.classList.add('is-listening');
+    console.group('Starting recognition');
     recognition.start();
   });
 }
 
 function speak(message) {
-  console.log('I\'m going to say:', message);
+  console.log('I\'m going to say: "' + message + '"');
   const utterance = new SpeechSynthesisUtterance(message);
   if (window.speechSynthesis.speaking) {
     console.error('speechSynthesis.speaking');
@@ -71,6 +81,10 @@ function speak(message) {
   utterance.pitch = 1;
   utterance.rate = 1;
   window.speechSynthesis.speak(utterance);
+  return new Promise((yay, nay) => {
+    utterance.addEventListener('end', yay, { once: true });
+    utterance.addEventListener('error', nay, { once: true });
+  });
 }
 
 function getDutchVoice(voiceList) {
@@ -103,26 +117,41 @@ function getRecognition(button, feedback) {
   recognition.addEventListener('result', e => {
     button.classList.remove('is-listening');
     const response = e.results[0][0].transcript;
-    const { message, word } = inputIsUnderstandable(response)
+    const { message, word, continuation } = inputIsUnderstandable(response)
       ? getSuccessfulAudioResponse(response)
       : getDisappointingAudioResponse(response);
-    speak(message);
+
+    speak(message).then(() => {
+      console.log('Done speaking');
+      if (Array.isArray(word) && continuation !== undefined) {
+        speak(continuation);
+        appendWord(feedback, ' ' + word[1]);
+      }
+    });
 
     if (word) {
-      feedback.innerHTML = `<span>${word}</span>`;
+      appendWord(feedback, Array.isArray(word) ? word[0] : word);
     }
-    console.log(response);
+    console.log('This is what I heard: "' + response + '"');
+    console.groupEnd();
   });
   recognition.addEventListener('start', e => {
-    console.log('Voice recognition activated.');
+    button.classList.add('is-listening');
     feedback.textContent = '';
   });
 
   return recognition;
 }
 
+function appendWord(feedback, word) {
+  const span = document.createElement('span');
+  span.textContent = word;
+  feedback.appendChild(span);
+}
+
 function getGrammar() {
-  const sounds = ['a', 'o', 'e', 'u', 'i', 'ie', 'eu', 'ui', 'ei'];
+  // Note: this doesn't seem to do much.
+  const sounds = ['a', 'o', 'e', 'u', 'i', 'ie', 'euh', 'oeh', 'ui', 'ei'];
   return `#JSGF V1.0; grammar colors; public <sound> = ${sounds.join(' | ')} ;`;
 }
 
@@ -139,6 +168,14 @@ function getSuccessfulAudioResponse(response) {
     : response.substr(SHORT_REQUEST.length);
   const interpretedWord = correctAuditively(requestedWord)
   const feedback = `${isLongRequest ? 'De ' : ''}"${interpretedWord}" schrijf je zo:`;
+
+  if (requestedWord === 'au') {
+    return {
+      message: feedback,
+      continuation: 'Óf zo:',
+      word: ['au', 'ou'],
+    };
+  }
 
   return {
     message: feedback,

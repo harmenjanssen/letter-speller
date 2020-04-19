@@ -1,10 +1,12 @@
 :root {
-    --background-color: hsl(71, 88%, 76%);
     --button-color: hsl(14, 98%, 50%);
-    --header-color: hsl(71, 40%, 50%);
     --button-size: 100px;
 }
 
+/**
+ * Layout
+ * -----------------------------------
+ */
 * {
     margin: 0;
     padding: 0;
@@ -13,11 +15,24 @@
 
 html {
     font-family: "-apple-system", "BlinkMacSystemFont", "Segoe UI", Helvetica,Arial, "sans-serif", "Apple Color Emoji", "Segoe UI Emoji";
-    background-color: var(--background-color);
+    background: repeating-linear-gradient(
+        to right,
+        #f6ba52,
+        #f6ba52 10px,
+        #ffd180 10px,
+        #ffd180 20px
+    );
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 main {
-    margin: 1em;
+    margin: 2em;
+    flex: 1;
     text-align: center;
     @media (min-width: 786) {
         max-width: 30%;
@@ -25,20 +40,42 @@ main {
     }
 }
 
+footer {
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+/**
+ * Contents
+ * -----------------------------------
+ */
 h1 {
     margin-bottom: 1em;
-    font-family: 'Bungee Shade', cursive;
-    color: var(--header-color);
+    font-family: 'Chango', cursive;
+    font-size: 3em;
+    text-shadow:
+        2px 2px 0 black,
+        5px 5px 0 hsl(307, 100%, 67%)
+        ;
+    color: white;
+    transform: rotate(-5deg);
+}
+
+a {
+    color: black;
+    text-shadow: 0 0 5px white;
 }
 
 .instructions {
     margin-bottom: 5em;
+    color: black;
+    text-shadow: 0 0 5px white;
 }
 
 #start-query {
 	width: var(--button-size);
 	height: var(--button-size);
-	margin: 0 auto 4rem;
+	margin: 0 auto 2rem;
 	display: block;
 	font: 0/0 a;
 	cursor: pointer;
@@ -48,10 +85,6 @@ h1 {
     border: 1px solid white;
 	background-color: var(--button-color);
 }
-#start-query:focus {
-    /* TODO */
-    outline: none;
-}
 
 #start-query.is-listening {
     animation-name: button-pulse;
@@ -59,29 +92,32 @@ h1 {
     animation-iteration-count: infinite;
 }
 
+#feedback {
+    margin-top: 0.5em;
+}
+
 #feedback span {
     position: relative;
-    margin-top: 0.5em;
+    display: block;
     color: white;
-    font-size: 6em;
+    font-size: 4em;
     text-shadow:
         2px 2px 0 black,
         5px 5px 0 hsl(307, 100%, 67%)
         ;
     font-family: 'Chango', cursive;
-    animation: feedback-appear 400ms cubic-bezier(.17, .89, .32, 1.49);
+    animation: feedback-appear 400ms cubic-bezier(.17, .89, .32, 2.49);
     transform-origin: center;
 }
 
-#feedback span::after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 12px;
-    height: 12px;
-    border-radius: 6px;
-    content: "";
+small {
+    font-size: 0.7em;
 }
+
+/**
+ * Animations
+ * -----------------------------------
+ */
 
 @keyframes button-pulse {
     from {
@@ -94,13 +130,12 @@ h1 {
 
 @keyframes feedback-appear {
     from {
-        font-size: 0;
         opacity: 0;
+        transform: scale(0);
         color: hsl(307, 100%, 67%);
     }
     to {
-        font-size: 6em;
-        transform: scale(1);
+        transform: scale(1) rotate(-5deg);
         opacity: 1;
         color: white;
     }
