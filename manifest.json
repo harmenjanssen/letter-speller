@@ -1,0 +1,15 @@
+{
+  "lang": "nl",
+  "name": "LetterSpeller",
+  "short_name": "Letters",
+  "description": "Leer de dubbelklanken!",
+  "theme_color": "#f6ba52",
+  "background_color": "#f6ba52",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    { "src": "/icon-small.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "/icon-large.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+
