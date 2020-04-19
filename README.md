@@ -12,3 +12,5 @@ This little web-app is made for her, to be able to ask the computer these questi
 Also, it allowed me to play with Javascript Speech API, which is super fun.
 
 Note: very rough around the edges: speech recognition is not that easy, who'da thunk it?
+
+View here: [https://wizardly-lovelace-c74ea3.netlify.app/](https://wizardly-lovelace-c74ea3.netlify.app/).
