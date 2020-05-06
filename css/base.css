@@ -67,9 +67,14 @@ a {
 }
 
 .instructions {
-    margin-bottom: 5em;
+    max-width: 15em;
+    margin: 0 auto 5em;
+    padding: 0.7em;
+    display: inline-block;
     color: black;
-    text-shadow: 0 0 5px white;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    border-radius: 0.3em;
 }
 
 #start-query {
