@@ -1,6 +1,6 @@
 # Letter-speller!
 
-View here: [https://wizardly-lovelace-c74ea3.netlify.app/](https://wizardly-lovelace-c74ea3.netlify.app/).
+View here: [https://letter-speller.netlify.app](https://letter-speller.netlify.app/).
 
 Specifically: spell the double-voweled sounds.
 
